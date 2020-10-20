@@ -13,6 +13,9 @@
 		<action
 			android:id="@+id/goal_scorer_action"
 			app:destination="@id/goal_dest" />
+		<argument
+			android:name="GoalScore"
+			app:argType="id.ac.polinema.skor.models.GoalScorer" />
 	</fragment>
 	<fragment
 		android:id="@+id/goal_dest"
