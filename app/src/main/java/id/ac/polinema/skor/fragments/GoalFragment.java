@@ -35,7 +35,7 @@ public class GoalFragment extends Fragment {
 							 Bundle savedInstanceState) {
 		binding = DataBindingUtil.inflate(inflater, R.layout.fragment_goal,container,false);
 		binding.setFragment(this);
-		//binding.setGoalScore(goalScorer);
+		binding.setGoalScorer(goalScorer);
 		requestKey = GoalFragmentArgs.fromBundle(getArguments()).getRequestKey();
 		return binding.getRoot();
 	}
