@@ -9,6 +9,7 @@
 			name="fragment"
 			type="id.ac.polinema.skor.fragments.GoalFragment" />
 	</data>
+
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -97,6 +98,7 @@
 			android:layout_marginEnd="8dp"
 			android:layout_marginBottom="8dp"
 			android:text="Cancel"
+			android:onClick="@{(v) -> fragment.onCancelClicked(v)}"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/guideline3"
 			app:layout_constraintStart_toStartOf="parent" />

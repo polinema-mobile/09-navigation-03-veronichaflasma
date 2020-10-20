@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.navigation.Navigation;
 
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import id.ac.polinema.skor.R;
 import id.ac.polinema.skor.databinding.FragmentScoreBinding;
 import id.ac.polinema.skor.models.GoalScorer;
 
-import static android.service.controls.ControlsProviderService.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +31,7 @@ public class ScoreFragment extends Fragment {
 
 	private List<GoalScorer> homeGoalScorerList;
 	private List<GoalScorer> awayGoalScorerList;
+	private FragmentScoreBinding binding;
 
 	public void ScoreFragment() {
 		// Required empty public constructor
@@ -42,22 +44,33 @@ public class ScoreFragment extends Fragment {
 		this.homeGoalScorerList = new ArrayList<>();
 		this.awayGoalScorerList = new ArrayList<>();
 
-		if(getArguments() != null){
-			GoalFragmentArgs args = GoalFragmentArgs.fromBundle(getArguments());
-			String GoalFragment = args.getRequestKey();
-			Log.i(TAG, "onViewCreated: "+ GoalFragment);
-		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		FragmentScoreBinding binding =
-				DataBindingUtil.inflate(inflater, R.layout.fragment_score, container, false);
+		binding = DataBindingUtil.inflate(inflater, R.layout.fragment_score,container,false);
+		binding.setFragment(this);
 		binding.setHomeGoalScorerList(homeGoalScorerList);
 		binding.setAwayGoalScorerList(awayGoalScorerList);
-		binding.setFragment(this);
-		return binding.getRoot();
+
+		getParentFragmentManager().setFragmentResultListener(HOME_REQUEST_KEY,this,new FragmentResultListener() {
+			@Override
+			public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+				GoalScorer goalScorer = result.getParcelable(SCORER_KEY);
+				homeGoalScorerList.add(goalScorer);
+			}
+		});
+
+		getParentFragmentManager().setFragmentResultListener(AWAY_REQUEST_KEY,this,new FragmentResultListener(){
+			@Override
+			public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+				GoalScorer goalScorer = result.getParcelable(SCORER_KEY);
+				awayGoalScorerList.add(goalScorer);
+			}
+		});
+		return  binding.getRoot();
+
 	}
 
 	public void onAddHomeClick(View view) {
@@ -69,4 +82,5 @@ public class ScoreFragment extends Fragment {
 		ScoreFragmentDirections.GoalScorerAction action = ScoreFragmentDirections.goalScorerAction(AWAY_REQUEST_KEY);
 		Navigation.findNavController(view).navigate(action);
 	}
+
 }
